@@ -13,13 +13,13 @@ my $start=0;
 my $end=0;
 while (my $line = <$file>) {
     if($start == 2 and $end < 1) {
-        if($line =~ /-.+-/) {
+        if($line =~ /---------------------------------------------------------------------/) {
             $end += 1;
             last;
         }
         print $line;
     }
-    if($orientation_check and $start < 2 and $line =~ /-.+-/) {
+    if($orientation_check and $start < 2 and $line =~ /---------------------------------------------------------------------/) {
         $start = $start + 1;
     }
     if($optimized_check and $line =~ /Standard orientation/) {
