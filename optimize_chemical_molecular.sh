@@ -1,19 +1,26 @@
 #!/bin/bash
 
+# input fileを渡したら，構造最適化を実行するプログラム
+
 filename=$1
+input_file="${filename}"
+
 filename=${filename##*/}
 filename=${filename:0:-4}
-extention=${filename##*.}
+# extention=${filename##*.}
+
+out_dir=$2
 
 export GAUSS_CDEF="0-11"
 
-input_file="${filename}.com"
-check_file="${filename}.chk"
+# input_file="${filename}.com"
+output_file="${filename}.log"
+# check_file="${filename}.chk"
 
 echo $input_file
-echo $check_file
+# echo $check_file
 
-g16 $input_file
+g16 $input_file "${out_dir}/${output_file}"
 
-./chk_to_fchk.sh $check_file
+# ./chk_to_fchk.sh $check_file
 
