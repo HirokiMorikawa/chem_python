@@ -202,4 +202,4 @@ if __name__ == "__main__":
 
     print(input_file)
 
-    # file_save(desc + "/" + name + ".com", xyz)
+    file_save(desc + "/" + name + ".com", input_file)
