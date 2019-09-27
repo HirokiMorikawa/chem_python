@@ -113,7 +113,7 @@ def mkdir(out_path):
 def parse():
     parser = argparse.ArgumentParser()
     parser.add_argument("-source", action=PathParser, required=True)
-    parser.add_argument("-desc", default="Gaussian/Input")
+    parser.add_argument("-desc", default="Gaussian/input")
     parser.add_argument("-calc_type", choices=['opt', 'td'], required=True)
     parser.add_argument("-calc_func", required=True)
     return parser
