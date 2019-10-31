@@ -148,27 +148,36 @@ def load_mol(file_path):
 
 def opt_xyz(mol):
     mol = AllChem.AddHs(mol)
-    AllChem.EmbedMolecule(mol)
-    AllChem.MMFFOptimizeMolecule(mol)
-    # molBlock = Chem.MolToMolBlock(mol)
+    # AllChem.EmbedMolecule(mol)
+    # AllChem.MMFFOptimizeMolecule(mol)
+    molBlock = Chem.MolToMolBlock(mol)
 
-    # # 原子数を取得
-    # num = mol.GetNumAtoms()
-    # # 全ての行をリストとして保存する
-    # lst_molBlock = molBlock.split("\n")
-    # # 4行目から（4+原子数）行目までの各行を抜き出す
-    # coordinates_part = lst_molBlock[4 : 4 + num]
-    # # pprint(coordinates_part)
-    # # 原子の種類と各座標をタプルとして保存
-    # coordinates = [(atoms[31],atoms[0:30]) for atoms in coordinates_part]
-    # # pprint(coordinates)
+    # 原子数を取得
+    num = mol.GetNumAtoms()
+    # 全ての行をリストとして保存する
+    lst_molBlock = molBlock.split("\n")
+    # 4行目から（4+原子数）行目までの各行を抜き出す
+    coordinates_part = lst_molBlock[4 : 4 + num]
+    # pprint(coordinates_part)
+    # 原子の種類と各座標をタプルとして保存
+    coordinates = [(atoms[31],atoms[0:30]) for atoms in coordinates_part]
     xyz = ""
-    conf = mol.GetConformer(0)
-    for n, (x, y, z) in enumerate(conf.GetPositions()):
-        atom = mol.GetAtomWithIdx(n)
-        xyz += "{}\t {: .8f} {: .8f} {: .8f}\n".format(
-            atom.GetSymbol(), x, y, z)
+    # for n, atom in coordinates:
+    #     x, y, z = map(lambda x: float(x), atom.strip().split())
+    #     xyz += "{}\t {: .8f} {: .8f} {: .8f}\n".format(
+    #         n, x, y, z)
+    for n, atom in coordinates:
+        xyz += "{}\t{}\n".format(n, atom)
 
+    # pprint(coordinates)
+    # xyz = ""
+    # conf = mol.GetConformer(0)
+    # for n, (x, y, z) in enumerate(conf.GetPositions()):
+    #     atom = mol.GetAtomWithIdx(n)
+    #     xyz += "{}\t {: .8f} {: .8f} {: .8f}\n".format(
+    #         atom.GetSymbol(), x, y, z)
+
+    # return xyz
     return xyz
 
 
