@@ -82,8 +82,8 @@ def getExcitedStateParameters():
                 excitedStateDict[key][2],
                 excitedStateDict[key][3]
             ))
-        print("励起電子配置")
-        pprint.pprint(excitedElectronDict[key])
+        # print("励起電子配置")
+        # pprint.pprint(excitedElectronDict[key])
 
 def getEigenValues():
     """
@@ -165,7 +165,7 @@ def getOrbitInfo(isDetail):
 def getNumOrbitalHOMO_LUMO():
     homo = getOrbitInfo(False)
     lumo = homo+1
-    print(homo, lumo)
+    # print(homo, lumo)
     return [homo, lumo]
 
 def getOrbitalDetail():
@@ -203,7 +203,7 @@ if __name__ == "__main__":
     # getOrbitInfo(False)
     en = getEigenValues()
     homo, lumo = getNumOrbitalHOMO_LUMO()
-    print(en[homo-1])
-    print(en[lumo-1])
+    print("homo eigenvalues->", en[homo-1])
+    print("lumo eigenvalues->", en[lumo-1])
 
     # getOrbitalDetail()
