@@ -1,3 +1,5 @@
+# coding:utf-8
+
 import argparse
 import os
 import sys
@@ -13,9 +15,13 @@ from multiprocessing import cpu_count
 
 class Gaussian_Input:
     def __init__(self):
+        self._chk_path = ""
         self._molecule_name = ""
         self._calc_function = ""
         self._xyz = ""
+
+    def set_chk_path(self, chk_path):
+        self._chk_path = chk_path
 
     def set_molecule_name(self, name):
         self._molecule_name = name
@@ -41,20 +47,20 @@ class Gaussian_Input:
 
 class Opt_Input(Gaussian_Input):
     def _make_struct(self):
-        return Opt_Section(self._molecule_name, self._calc_function)
+        return Opt_Section(self._molecule_name, self._calc_function, self._chk_path)
 
 
 class Td_Input(Gaussian_Input):
     def _make_struct(self):
-        return Td_Section(self._molecule_name, self._calc_function)
+        return Td_Section(self._molecule_name, self._calc_function, self._chk_path)
 
 
 class Section:
-    def __init__(self, molecule_name, calc_function):
-        thread = int(max(1, cpu_count() * 0.6))
+    def __init__(self, molecule_name, calc_function, chk_path):
+        thread = int(max(1, cpu_count() * 0.8))
         self._memory = "4GB"
         self._cpu = "0-{}".format(thread)
-        self._checkpoint = "{}.chk".format(molecule_name)
+        self._checkpoint = "{}{}.chk".format(chk_path, molecule_name)
         self._molecule_name = molecule_name
         self._calc_function = calc_function
 
@@ -77,16 +83,16 @@ class Section:
 
 
 class Opt_Section(Section):
-    def __init__(self, molecule_name, calc_function):
-        super().__init__(molecule_name, calc_function)
+    def __init__(self, molecule_name, calc_function, chk_path):
+        super().__init__(molecule_name, calc_function, chk_path)
 
     def root(self):
         return "#p opt {} pop=full".format(self._calc_function)
 
 
 class Td_Section(Section):
-    def __init__(self, molecule_name, calc_function):
-        super().__init__(molecule_name, calc_function)
+    def __init__(self, molecule_name, calc_function, chk_path):
+        super().__init__(molecule_name, calc_function, chk_path)
 
     def root(self):
         return "#p td {} pop=full".format(self._calc_function)
@@ -94,14 +100,13 @@ class Td_Section(Section):
 
 class PathParser(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
+        parsed = None
         # parsed = parseof("seed", parser, values)
-        if "smiles" in values:
+        if ".smiles" in values:
             parsed = values.rstrip(".smiles").split("/")[-1]
-        elif "xyz" in values:
+        elif ".xyz" in values:
             parsed = values.rstrip(".xyz").split("/")[-1]
 
-        # parsed = values.rstrip(".smiles").split("/")[-1]
-        
         setattr(namespace, self.dest, [values, parsed])
 
 
@@ -122,6 +127,7 @@ def parse():
 def file_load(file_path):
     with open(file_path) as f:
         return f.read()
+
 
 def file_load_line(file_path):
     with open(file_path) as f:
@@ -189,7 +195,8 @@ if __name__ == "__main__":
         name = name + "_ExS"
     else:
         pass
-    
+
+    gaussian_input_maker.set_chk_path(desc.rstrip("input") if "input" in desc else desc)
     gaussian_input_maker.set_molecule_name(name)
     gaussian_input_maker.set_calc_function(calculate_function)
     gaussian_input_maker.set_input_coordinates(initial_xyz)

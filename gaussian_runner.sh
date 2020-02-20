@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# input fileを渡したら，構造最適化を実行するプログラム
+# input fileを渡したら，gaussianを実行するプログラム
 
 filename=$1
 input_file="${filename}"
